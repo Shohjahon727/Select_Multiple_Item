@@ -1,0 +1,165 @@
+﻿
+@using Select_Multiple_Item.Enums
+@using Select_Multiple_Item.Entities
+
+@model List<Car>
+<form asp-action="Filter" method="get">
+	<div class="row mb-3">
+		<label class="col-sm-4 col-form-label">Manufacturer</label>
+		<div class="col-sm-8">
+			<select class="form-select" name="filterbymanufacturer" multiple>
+
+				@foreach (var manufacturer in Enum.GetValues(typeof(Manufacturers)))
+				{
+					<option>@manufacturer</option>
+				}
+			</select>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<label class="col-sm-4 col-form-label">Colors</label>
+		<div class="col-sm-8">
+			<select class="form-select" name="filterbycolor" multiple>
+
+				@foreach (var color in Enum.GetValues(typeof(Colors)))
+				{
+					<option>@color</option>
+				}
+			</select>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<label class="col-sm-4 col-form-label">Prices</label>
+		<div class="col-sm-8">
+			<select class="form-select" name="filterbyprice" multiple>
+
+				@foreach (int price in Enum.GetValues(typeof(Select_Multiple_Item.Enums.Prices)))
+				{
+					<option value="@((int)price)">@price</option>
+				}
+			</select>
+		</div>
+	</div>
+	
+
+	<div class="d-flex justify-content-end mb-3">
+		<button type="submit" class="btn btn-primary">Filter</button>
+		<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
+			Back to List
+		</a>
+	</div>
+</form>
+@* <form asp-action="FilterByColor" method="get">
+
+
+	<div class="row mb-3">
+		<label class="col-sm-4 col-form-label">Colors</label>
+		<div class="col-sm-8">
+			<select class="form-select" name="filterbycolor" multiple>
+
+				@foreach (var color in Enum.GetValues(typeof(Colors)))
+				{
+					<option >@color</option>
+				}
+			</select>
+		</div>
+	</div>
+		
+	
+	<div class="d-flex justify-content-end mt-5 mb-3">
+		<button type="submit" class="btn btn-primary">Filter</button>
+		<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
+			Back to List
+		</a>
+	</div>
+
+</form>
+<form asp-action="FilterByPrice" method="get">
+
+
+	<div class="row mb-3">
+		<label class="col-sm-4 col-form-label">Prices</label>
+		<div class="col-sm-8">
+			<select class="form-select" name="filterbyprice" multiple>
+
+				@foreach (var price in Enum.GetValues(typeof(Select_Multiple_Item.Enums.Prices)))
+				{
+					<option value="@((int)price)">@price</option>
+				}
+			</select>
+		</div>
+	</div>
+	<div class="d-flex justify-content-end mt-5 mb-3">
+		<button type="submit" class="btn btn-primary">Filter</button>
+		<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
+			Back to List
+		</a>
+	</div>
+</form> *@
+
+<div class="card shadow-lg p-3 mb-0 bg-body-tertiary rounded mt-2 mb-3">
+	<div class="card-header bg-secondary bg-gradient ml-0 py-2 shadow-lg p-3 mb-2 bg-body-tertiary rounded">
+		<div class="row">
+			<div class="col-12 text-center">
+				<h2 class="text-black py-2">List of Cars</h2>
+			</div>
+		</div>
+	</div>
+	<table class="table table-bordered	table-striped shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Manufacturer</th>
+				<th>Model</th>
+				<th>Color</th>
+				<th>Price</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var car in Model)
+			{
+				<tr>
+					<td>@car.Id</td>
+					<td>@car.Manufacturer</td>
+					<td>@car.Model</td>
+					<td>@car.Color</td>
+					<td>@car.Price</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+
+
+ <form asp-action="PriceRange" method="get">
+ 	<label for="MinPrice">Minimum Price:</label>
+ 	<input type="number" id="MinPrice" name="MinPrice" step="0.01" min="0" />
+
+ 	<label for="MaxPrice">Maximum Price:</label>
+ 	<input type="number" id="MaxPrice" name="MaxPrice" step="0.01" min="0" />
+
+	<button type="submit" class="btn btn-primary ms-3">Filter</button>
+	<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
+		Back to List
+	</a>
+@* 	<div class="d-flex justify-content-end">
+		<button type="submit" class="btn btn-primary">Filter</button>
+		<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
+			Back to List
+		</a>
+	</div> *@
+
+ </form>
+
+
+
+
+
+
+
+
+
+
+
+
