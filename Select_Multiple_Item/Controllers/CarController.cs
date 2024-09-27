@@ -14,14 +14,13 @@ public class CarController : Controller
     {
         _context = context;
     }
-
     public IActionResult Index()
     {
 
         var allCars = _context.Cars.ToList();
 
 
-        return View(allCars);
+        return View((allCars, new List<string>(), new List<string>()));
     }
     public IActionResult Create()
     {
@@ -81,57 +80,27 @@ public class CarController : Controller
 		return View("Index", filteredCars);
 	}
 
-	//[HttpGet]
-	public IActionResult FilterByPrice(string[] filterbyprice)
-	{
-
-		if (filterbyprice.Length == 0)
-		{
-
-			var allCars = _context.Cars.ToList();
-			return View("Index", allCars);
-		}
-
-		List<Prices> colors = new List<Prices>();
-		foreach (var item in filterbyprice)
-		{
-			colors.Add((Prices)Enum.Parse(typeof(Prices), item, true));
-		}
-
-
-		var filteredCars = _context.Cars
-			.Where(car => colors.Contains((Prices)car.Price))
-			.ToList();
-
-		return View("Index", filteredCars);
-	}
+	
+	
     [HttpGet]
-	public IActionResult Filter(string[] filterbycolor, string[] filterbyprice, string[] filterbymanufacturer)
+	public IActionResult Filter(string[] filterbycolor,  string[] filterbymanufacturer, decimal? MinPrice,decimal? MaxPrice)
 	{
 		
-		if ((filterbycolor == null || filterbycolor.Length == 0) && (filterbyprice == null || filterbyprice.Length == 0) && (filterbymanufacturer == null || filterbymanufacturer.Length ==0))
+		if ((filterbycolor == null || filterbycolor.Length == 0) && 
+			(filterbymanufacturer == null || filterbymanufacturer.Length ==0) &&
+			(MinPrice == null || MaxPrice == null))
+
 		{
 			var allCars = _context.Cars.ToList();
-			return View("Index", allCars);
+			return View("Index", (allCars, new List<string>(), new List<string>()));
 		}
 
-		
 		List<Colors> colors = new List<Colors>();
 		if (filterbycolor != null && filterbycolor.Length > 0)
 		{
 			foreach (var item in filterbycolor)
 			{
 				colors.Add((Colors)Enum.Parse(typeof(Colors), item, true));
-			}
-		}
-
-		
-		List<Prices> prices = new List<Prices>();
-		if (filterbyprice != null && filterbyprice.Length > 0)
-		{
-			foreach (var item in filterbyprice)
-			{
-				prices.Add((Prices)Enum.Parse(typeof(Prices), item, true));
 			}
 		}
 
@@ -146,21 +115,22 @@ public class CarController : Controller
 		
 		var filteredCars = _context.Cars
 			.Where(car => (colors.Count == 0 || colors.Contains(car.Color)) && 
-						  (prices.Count == 0 || prices.Contains((Prices)car.Price)) &&
-						  (manufacturers.Count == 0 || manufacturers.Contains(car.Manufacturer))) 
+						  (manufacturers.Count == 0 || manufacturers.Contains(car.Manufacturer)) &&
+						  (MinPrice == null || car.Price >= MinPrice) &&  
+					      (MaxPrice == null || car.Price <= MaxPrice)) 
 			.ToList();
 
-		return View("Index", filteredCars);
+		return View("Index",(filteredCars, filterbymanufacturer.ToList(),filterbycolor.ToList()));
 	}
-	[HttpGet]
+	
 	public IActionResult PriceRange(decimal MinPrice, decimal MaxPrice)
 	{
-
+		
 		var filteredCars = _context.Cars
 									.Where(a => a.Price >= MinPrice && a.Price <= MaxPrice)
 									.ToList();
 
-		return View("Index", filteredCars);
+		return View("Index", filteredCars); 
 	}
 
 

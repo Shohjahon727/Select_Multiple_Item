@@ -2,7 +2,7 @@
 @using Select_Multiple_Item.Enums
 @using Select_Multiple_Item.Entities
 
-@model List<Car>
+@model (List<Car>,List<string>,List<string>)
 <form asp-action="Filter" method="get">
 	<div class="row mb-3">
 		<label class="col-sm-4 col-form-label">Manufacturer</label>
@@ -11,7 +11,17 @@
 
 				@foreach (var manufacturer in Enum.GetValues(typeof(Manufacturers)))
 				{
-					<option>@manufacturer</option>
+					var filter = Model.Item2;
+					
+					@if(filter.Contains(manufacturer.ToString()))
+					{
+						<option selected>@manufacturer</option>
+					}
+					else
+					{
+						<option>@manufacturer</option>
+
+					}
 				}
 			</select>
 		</div>
@@ -23,24 +33,26 @@
 
 				@foreach (var color in Enum.GetValues(typeof(Colors)))
 				{
-					<option>@color</option>
-				}
-			</select>
-		</div>
-	</div>
-	<div class="row mb-3">
-		<label class="col-sm-4 col-form-label">Prices</label>
-		<div class="col-sm-8">
-			<select class="form-select" name="filterbyprice" multiple>
+					var filter = Model.Item3;
+					if (filter.Contains(color.ToString()))
+					{
+						<option selected>@color</option>
+					}
+					else
+					{
+						<option>@color</option>
 
-				@foreach (int price in Enum.GetValues(typeof(Select_Multiple_Item.Enums.Prices)))
-				{
-					<option value="@((int)price)">@price</option>
+					}
 				}
 			</select>
 		</div>
 	</div>
 	
+	<label for="MinPrice">Minimum Price:</label>
+	<input type="number" id="MinPrice" name="MinPrice" step="0.01" min="0" />
+
+	<label for="MaxPrice">Maximum Price:</label>
+	<input type="number" id="MaxPrice" name="MaxPrice" step="0.01" min="0" />
 
 	<div class="d-flex justify-content-end mb-3">
 		<button type="submit" class="btn btn-primary">Filter</button>
@@ -116,7 +128,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var car in Model)
+			@foreach (var car in Model.Item1)
 			{
 				<tr>
 					<td>@car.Id</td>
@@ -132,7 +144,7 @@
 
 
 
- <form asp-action="PriceRange" method="get">
+@* <form asp-action="PriceRange" method="get">
  	<label for="MinPrice">Minimum Price:</label>
  	<input type="number" id="MinPrice" name="MinPrice" step="0.01" min="0" />
 
@@ -143,16 +155,34 @@
 	<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
 		Back to List
 	</a>
-@* 	<div class="d-flex justify-content-end">
+	<div class="d-flex justify-content-end">
 		<button type="submit" class="btn btn-primary">Filter</button>
 		<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
 			Back to List
 		</a>
-	</div> *@
+	</div>
 
- </form>
+ </form> *@
 
+@* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	$(document).ready(function () {
+		$('#Filter').click(function (e) {
+			e.preventDefault(); // Sahifaning yangilanishini to'xtatadi
 
+			$.ajax({
+				url: '/filter', // Action method manzili
+				type: 'GET',
+				success: function (response) {
+					console.log(response); // Ma'lumotni div ichiga joylashtiramiz
+				},
+				error: function () {
+					alert("Ma'lumot yuklashda xato yuz berdi");
+				}
+			});
+		});
+	});
+</script> *@
 
 
 
