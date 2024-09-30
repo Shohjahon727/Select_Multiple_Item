@@ -1,5 +1,107 @@
 ﻿
+
+
 @using Select_Multiple_Item.Enums
+@using Select_Multiple_Item.Entities
+
+@section Styles {
+		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+}
+
+<form id="filter-form" method="get">
+	<div class="row mb-3">
+		<label class="col-sm-4 col-form-label">Manufacturer</label>
+		<div class="col-sm-8">
+			<select class="form-select select2" name="filterbymanufacturer" multiple>
+				@foreach (var manufacturer in Enum.GetValues(typeof(Manufacturers)))
+				{
+						<option value="@manufacturer">@manufacturer</option>
+				}
+			</select>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<label class="col-sm-4 col-form-label">Colors</label>
+		<div class="col-sm-8">
+			<select class="form-select select2" name="filterbycolor" multiple>
+				@foreach (var color in Enum.GetValues(typeof(Colors)))
+				{
+						<option value="@color">@color</option>
+				}
+			</select>
+		</div>
+	</div>
+
+	<label for="MinPrice">Minimum Price:</label>
+	<input type="number" id="MinPrice" name="MinPrice" step="0.01" min="0" />
+
+	<label for="MaxPrice">Maximum Price:</label>
+	<input type="number" id="MaxPrice" name="MaxPrice" step="0.01" min="0" />
+
+	<div class="d-flex justify-content-end mb-3">
+		<button type="submit" class="btn btn-primary">Filter</button>
+		<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
+			Back to List
+		</a>
+	</div>
+</form>
+
+<div id="car-list"></div>
+
+@section Scripts {
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+		<script>
+			$(document).ready(function () {
+				// Initialize Select2
+				$('.select2').select2();
+
+				function loadCars() {
+					$.ajax({
+						url: '@Url.Action("Filter", "Car")',
+						type: 'GET',
+						data: $('#filter-form').serialize(),
+						success: function (result) {
+							var tableHtml = '<table class="table table-bordered table-striped">' +
+								'<thead><tr><th>Id</th><th>Manufacturer</th><th>Model</th><th>Color</th><th>Price</th></tr></thead><tbody>';
+
+							$.each(result.data, function (i, car) {
+								tableHtml += '<tr>' +
+									'<td>' + car.id + '</td>' +
+									'<td>' + car.manufacturer + '</td>' +
+									'<td>' + car.model + '</td>' +
+									'<td>' + car.color + '</td>' +
+									'<td>' + car.price + '</td>' +
+									'</tr>';
+							});
+
+							tableHtml += '</tbody></table>';
+							$('#car-list').html(tableHtml);
+
+							// Update selected options
+							$('select[name="filterbycolor"]').val(result.selectedColors).trigger('change');
+							$('select[name="filterbymanufacturer"]').val(result.selectedManufacturers).trigger('change');
+						},
+						error: function (xhr, status, error) {
+							console.error("An error occurred: " + error);
+							alert("An error occurred while filtering cars.");
+						}
+					});
+				}
+
+				// Load cars on page load
+				loadCars();
+
+				// Handle form submission
+				$('#filter-form').on('submit', function (e) {
+					e.preventDefault();
+					loadCars();
+				});
+			});
+		</script>
+}
+
+@* @using Select_Multiple_Item.Enums
 @using Select_Multiple_Item.Entities
 
  @model (List<Car>,List<string>,List<string>)
@@ -97,7 +199,7 @@
 		</tbody>
 	</table>
 </div>
-
+ *@
 
 @* <form asp-action="FilterByColor" method="get">
 
@@ -166,59 +268,12 @@
 
  </form> *@
 
-@* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-	$(document).ready(function () {
-		$('#Filter').click(function (e) {
-			e.preventDefault(); // Sahifaning yangilanishini to'xtatadi
-
-			$.ajax({
-				url: '/filter', // Action method manzili
-				type: 'GET',
-				success: function (response) {
-					console.log(response); // Ma'lumotni div ichiga joylashtiramiz
-				},
-				error: function () {
-					alert("Ma'lumot yuklashda xato yuz berdi");
-				}
-			});
-		});
-	});
-</script> *@
 
 
 
 
 
-@* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-	$(document).ready(function () {
-		$('#apply-filters').on('click', function () {
-			var selectedColors = $('#color-filter').val();
-			var selectedManufacturers = $('#manufacturer-filter').val();
-			var minPrice = $('#min-price-filter').val();
-			var maxPrice = $('#max-price-filter').val();
 
-			$.ajax({
-				url: '/Car/Filter',
-				type: 'GET',
-				data: {
-					filterbycolor: selectedColors,
-					filterbymanufacturer: selectedManufacturers,
-					MinPrice: minPrice,
-					MaxPrice: maxPrice
-				},
-				success: function (response) {
-					$('#car-list').html(response);
-				},
-				error: function () {
-					alert('Error fetching filtered cars.');
-				}
-			});
-		});
-	});
-</script>
- *@
 
 
 
@@ -316,54 +371,6 @@
     </div>
 </div> *@
 
-@* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
- *@<script>
-    // $(document).ready(function () {
-    //     $('#apply-filters').on('click', function () {
-    //         var selectedColors = $('select[name="filterbycolor"]').val();
-    //         var selectedManufacturers = $('select[name="filterbymanufacturer"]').val();
-    //         var minPrice = $('#MinPrice').val();
-    //         var maxPrice = $('#MaxPrice').val();
-
-    //         $.ajax({
-    //             url: '@Url.Action("Filter")',
-    //             type: 'GET',
-    //             data: {
-    //                 filterbycolor: selectedColors,
-    //                 filterbymanufacturer: selectedManufacturers,
-    //                 MinPrice: minPrice,
-    //                 MaxPrice: maxPrice
-    //             },
-    //             success: function (response) {
-    //                 $('#car-list').html(response);
-    //             },
-    //             error: function () {
-    //                 alert('Error fetching filtered cars.');
-    //             }
-    //         });
-    //     });
-    // });
-	// $(document).ready(function () {
-	// 	$('#filter-form').on('submit', function (event) {
-	// 		event.preventDefault(); // Formani to'ldirish va yuborishni to'xtating
-
-	// 		$.ajax({
-	// 			type: 'GET',
-	// 			url: '@Url.Action("Filter")', // Filter action URL
-	// 			data: $(this).serialize(), // Formadagi ma'lumotlarni oling
-	// 			success: function (data) {
-	// 				$('#car-list').html(data); // Natijalarni car-list elementiga joylashtiring
-	// 			},
-	// 			error: function (xhr, status, error) {
-	// 				console.error("Status: " + status);
-	// 				console.error("Error: " + error);
-	// 				alert('Error fetching filtered cars: ' + error);
-	// 			}
-	// 		});
-	// 	});
-	// });
-
-</script>
 
 
 
