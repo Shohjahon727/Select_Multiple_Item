@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Select_Multiple_Item.Entities.Car>
+
+<div class="card shadow-lg p-3 mb-0 bg-body-tertiary rounded mt-2 mb-3">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-2 shadow-lg p-3 mb-2 bg-body-tertiary rounded">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-black py-2">List of Cars</h2>
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Manufacturer</th>
+                <th>Model</th>
+                <th>Color</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in Model)
+            {
+                <tr>
+                    <td>@car.Id</td>
+                    <td>@car.Manufacturer</td>
+                    <td>@car.Model</td>
+                    <td>@car.Color</td>
+                    <td>@car.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

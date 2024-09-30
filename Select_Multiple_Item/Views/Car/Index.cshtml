@@ -2,7 +2,8 @@
 @using Select_Multiple_Item.Enums
 @using Select_Multiple_Item.Entities
 
-@model (List<Car>,List<string>,List<string>)
+ @model (List<Car>,List<string>,List<string>)
+
 <form asp-action="Filter" method="get">
 	<div class="row mb-3">
 		<label class="col-sm-4 col-form-label">Manufacturer</label>
@@ -61,53 +62,8 @@
 		</a>
 	</div>
 </form>
-@* <form asp-action="FilterByColor" method="get">
 
 
-	<div class="row mb-3">
-		<label class="col-sm-4 col-form-label">Colors</label>
-		<div class="col-sm-8">
-			<select class="form-select" name="filterbycolor" multiple>
-
-				@foreach (var color in Enum.GetValues(typeof(Colors)))
-				{
-					<option >@color</option>
-				}
-			</select>
-		</div>
-	</div>
-		
-	
-	<div class="d-flex justify-content-end mt-5 mb-3">
-		<button type="submit" class="btn btn-primary">Filter</button>
-		<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
-			Back to List
-		</a>
-	</div>
-
-</form>
-<form asp-action="FilterByPrice" method="get">
-
-
-	<div class="row mb-3">
-		<label class="col-sm-4 col-form-label">Prices</label>
-		<div class="col-sm-8">
-			<select class="form-select" name="filterbyprice" multiple>
-
-				@foreach (var price in Enum.GetValues(typeof(Select_Multiple_Item.Enums.Prices)))
-				{
-					<option value="@((int)price)">@price</option>
-				}
-			</select>
-		</div>
-	</div>
-	<div class="d-flex justify-content-end mt-5 mb-3">
-		<button type="submit" class="btn btn-primary">Filter</button>
-		<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
-			Back to List
-		</a>
-	</div>
-</form> *@
 
 <div class="card shadow-lg p-3 mb-0 bg-body-tertiary rounded mt-2 mb-3">
 	<div class="card-header bg-secondary bg-gradient ml-0 py-2 shadow-lg p-3 mb-2 bg-body-tertiary rounded">
@@ -143,7 +99,53 @@
 </div>
 
 
+@* <form asp-action="FilterByColor" method="get">
 
+
+	<div class="row mb-3">
+		<label class="col-sm-4 col-form-label">Colors</label>
+		<div class="col-sm-8">
+			<select class="form-select" name="filterbycolor" multiple>
+
+				@foreach (var color in Enum.GetValues(typeof(Colors)))
+				{
+					<option >@color</option>
+				}
+			</select>
+		</div>
+	</div>
+
+
+	<div class="d-flex justify-content-end mt-5 mb-3">
+		<button type="submit" class="btn btn-primary">Filter</button>
+		<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
+			Back to List
+		</a>
+	</div>
+
+</form>
+<form asp-action="FilterByPrice" method="get">
+
+
+	<div class="row mb-3">
+		<label class="col-sm-4 col-form-label">Prices</label>
+		<div class="col-sm-8">
+			<select class="form-select" name="filterbyprice" multiple>
+
+				@foreach (var price in Enum.GetValues(typeof(Select_Multiple_Item.Enums.Prices)))
+				{
+					<option value="@((int)price)">@price</option>
+				}
+			</select>
+		</div>
+	</div>
+	<div class="d-flex justify-content-end mt-5 mb-3">
+		<button type="submit" class="btn btn-primary">Filter</button>
+		<a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">
+			Back to List
+		</a>
+	</div>
+</form> *@
 @* <form asp-action="PriceRange" method="get">
  	<label for="MinPrice">Minimum Price:</label>
  	<input type="number" id="MinPrice" name="MinPrice" step="0.01" min="0" />
@@ -185,6 +187,183 @@
 </script> *@
 
 
+
+
+
+@* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	$(document).ready(function () {
+		$('#apply-filters').on('click', function () {
+			var selectedColors = $('#color-filter').val();
+			var selectedManufacturers = $('#manufacturer-filter').val();
+			var minPrice = $('#min-price-filter').val();
+			var maxPrice = $('#max-price-filter').val();
+
+			$.ajax({
+				url: '/Car/Filter',
+				type: 'GET',
+				data: {
+					filterbycolor: selectedColors,
+					filterbymanufacturer: selectedManufacturers,
+					MinPrice: minPrice,
+					MaxPrice: maxPrice
+				},
+				success: function (response) {
+					$('#car-list').html(response);
+				},
+				error: function () {
+					alert('Error fetching filtered cars.');
+				}
+			});
+		});
+	});
+</script>
+ *@
+
+
+
+@*  @model (List<Car>, List<string>, List<string>)
+
+<!-- Filter Form -->
+<form id="filter-form" method="get">
+    <div class="row mb-3">
+        <label class="col-sm-4 col-form-label">Manufacturer</label>
+        <div class="col-sm-8">
+            <select class="form-select" name="filterbymanufacturer" multiple>
+                @foreach (var manufacturer in Enum.GetValues(typeof(Manufacturers)))
+                {
+                    var filter = Model.Item2;
+
+					@if (filter.Contains(manufacturer.ToString()))
+					{
+						<option selected>@manufacturer</option>
+					}
+					else
+					{
+						<option>@manufacturer</option>
+
+					}
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-sm-4 col-form-label">Colors</label>
+        <div class="col-sm-8">
+            <select class="form-select" name="filterbycolor" multiple>
+                @foreach (var color in Enum.GetValues(typeof(Colors)))
+                {
+                    var filter = Model.Item3;
+					if (filter.Contains(color.ToString()))
+					{
+						<option selected>@color</option>
+					}
+					else
+					{
+						<option>@color</option>
+
+					}
+                }
+            </select>
+        </div>
+    </div>
+
+    <label for="MinPrice">Minimum Price:</label>
+    <input type="number" id="MinPrice" name="MinPrice" step="0.01" min="0" />
+
+    <label for="MaxPrice">Maximum Price:</label>
+    <input type="number" id="MaxPrice" name="MaxPrice" step="0.01" min="0" />
+
+    <div class="d-flex justify-content-end mb-3">
+        <button type="button" id="apply-filters" class="btn btn-primary">Filter</button>
+        <a asp-controller="Car" asp-action="Index" class="btn btn-secondary ms-3">Back to List</a>
+    </div>
+</form> *@
+
+@* <div id="car-list">
+    <!-- Filtered cars will be rendered here -->
+    <div class="card shadow-lg p-3 mb-0 bg-body-tertiary rounded mt-2 mb-3">
+        <div class="card-header bg-secondary bg-gradient ml-0 py-2 shadow-lg p-3 mb-2 bg-body-tertiary rounded">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-black py-2">List of Cars</h2>
+                </div>
+            </div>
+        </div>
+        <table class="table table-bordered table-striped shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Manufacturer</th>
+                    <th>Model</th>
+                    <th>Color</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var car in Model.Item1)
+                {
+                    <tr>
+                        <td>@car.Id</td>
+                        <td>@car.Manufacturer</td>
+                        <td>@car.Model</td>
+                        <td>@car.Color</td>
+                        <td>@car.Price</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div> *@
+
+@* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+ *@<script>
+    // $(document).ready(function () {
+    //     $('#apply-filters').on('click', function () {
+    //         var selectedColors = $('select[name="filterbycolor"]').val();
+    //         var selectedManufacturers = $('select[name="filterbymanufacturer"]').val();
+    //         var minPrice = $('#MinPrice').val();
+    //         var maxPrice = $('#MaxPrice').val();
+
+    //         $.ajax({
+    //             url: '@Url.Action("Filter")',
+    //             type: 'GET',
+    //             data: {
+    //                 filterbycolor: selectedColors,
+    //                 filterbymanufacturer: selectedManufacturers,
+    //                 MinPrice: minPrice,
+    //                 MaxPrice: maxPrice
+    //             },
+    //             success: function (response) {
+    //                 $('#car-list').html(response);
+    //             },
+    //             error: function () {
+    //                 alert('Error fetching filtered cars.');
+    //             }
+    //         });
+    //     });
+    // });
+	// $(document).ready(function () {
+	// 	$('#filter-form').on('submit', function (event) {
+	// 		event.preventDefault(); // Formani to'ldirish va yuborishni to'xtating
+
+	// 		$.ajax({
+	// 			type: 'GET',
+	// 			url: '@Url.Action("Filter")', // Filter action URL
+	// 			data: $(this).serialize(), // Formadagi ma'lumotlarni oling
+	// 			success: function (data) {
+	// 				$('#car-list').html(data); // Natijalarni car-list elementiga joylashtiring
+	// 			},
+	// 			error: function (xhr, status, error) {
+	// 				console.error("Status: " + status);
+	// 				console.error("Error: " + error);
+	// 				alert('Error fetching filtered cars: ' + error);
+	// 			}
+	// 		});
+	// 	});
+	// });
+
+</script>
 
 
 

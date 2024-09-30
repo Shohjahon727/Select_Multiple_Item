@@ -80,14 +80,14 @@ public class CarController : Controller
 		return View("Index", filteredCars);
 	}
 
-	
-	
-    [HttpGet]
-	public IActionResult Filter(string[] filterbycolor,  string[] filterbymanufacturer, decimal? MinPrice,decimal? MaxPrice)
+
+
+	[HttpGet]
+	public IActionResult Filter(string[] filterbycolor, string[] filterbymanufacturer, decimal? MinPrice, decimal? MaxPrice)
 	{
-		
-		if ((filterbycolor == null || filterbycolor.Length == 0) && 
-			(filterbymanufacturer == null || filterbymanufacturer.Length ==0) &&
+
+		if ((filterbycolor == null || filterbycolor.Length == 0) &&
+			(filterbymanufacturer == null || filterbymanufacturer.Length == 0) &&
 			(MinPrice == null || MaxPrice == null))
 
 		{
@@ -105,32 +105,64 @@ public class CarController : Controller
 		}
 
 		List<Manufacturers> manufacturers = new List<Manufacturers>();
-		if(filterbymanufacturer != null && filterbymanufacturer.Length > 0)
+		if (filterbymanufacturer != null && filterbymanufacturer.Length > 0)
 		{
 			foreach (var item in filterbymanufacturer)
 			{
 				manufacturers.Add((Manufacturers)(Enum.Parse(typeof(Manufacturers), item, true)));
 			}
 		}
-		
+
 		var filteredCars = _context.Cars
-			.Where(car => (colors.Count == 0 || colors.Contains(car.Color)) && 
+			.Where(car => (colors.Count == 0 || colors.Contains(car.Color)) &&
 						  (manufacturers.Count == 0 || manufacturers.Contains(car.Manufacturer)) &&
-						  (MinPrice == null || car.Price >= MinPrice) &&  
-					      (MaxPrice == null || car.Price <= MaxPrice)) 
+						  (MinPrice == null || car.Price >= MinPrice) &&
+						  (MaxPrice == null || car.Price <= MaxPrice))
 			.ToList();
 
-		return View("Index",(filteredCars, filterbymanufacturer.ToList(),filterbycolor.ToList()));
+		return View("Index", (filteredCars, filterbymanufacturer.ToList(), filterbycolor.ToList()));
 	}
-	
+	//[HttpGet]
+	//public IActionResult Filter(string[] filterbycolor, string[] filterbymanufacturer, decimal? MinPrice, decimal? MaxPrice)
+	//{
+	//	var filteredCars = _context.Cars.AsQueryable();
+
+	//	// Filter by color
+	//	if (filterbycolor != null && filterbycolor.Length > 0)
+	//	{
+	//		List<Colors> colors = filterbycolor.Select(c => (Colors)Enum.Parse(typeof(Colors), c, true)).ToList();
+	//		filteredCars = filteredCars.Where(car => colors.Contains(car.Color));
+	//	}
+
+	//	// Filter by manufacturer
+	//	if (filterbymanufacturer != null && filterbymanufacturer.Length > 0)
+	//	{
+	//		List<Manufacturers> manufacturers = filterbymanufacturer.Select(m => (Manufacturers)Enum.Parse(typeof(Manufacturers), m, true)).ToList();
+	//		filteredCars = filteredCars.Where(car => manufacturers.Contains(car.Manufacturer));
+	//	}
+
+	//	// Filter by price
+	//	if (MinPrice.HasValue)
+	//	{
+	//		filteredCars = filteredCars.Where(car => car.Price >= MinPrice);
+	//	}
+
+	//	if (MaxPrice.HasValue)
+	//	{
+	//		filteredCars = filteredCars.Where(car => car.Price <= MaxPrice);
+	//	}
+
+	//	return PartialView("_CarList", filteredCars.ToList());
+	//}
+
 	public IActionResult PriceRange(decimal MinPrice, decimal MaxPrice)
 	{
 		
-		var filteredCars = _context.Cars
-									.Where(a => a.Price >= MinPrice && a.Price <= MaxPrice)
-									.ToList();
+			var filteredCars = _context.Cars
+										.Where(a => a.Price >= MinPrice && a.Price <= MaxPrice)
+										.ToList();
 
-		return View("Index", filteredCars); 
+			return View("Index", filteredCars); 
 	}
 
 
