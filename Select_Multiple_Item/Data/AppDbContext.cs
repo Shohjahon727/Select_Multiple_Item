@@ -20,7 +20,7 @@ namespace Select_Multiple_Item.Data
                     Id = 1,
                     Manufacturer = Manufacturers.Chevrolet,
                     Model = "Cobalt",
-                    Color = Colors.black,
+                    Color = Colors.Black,
                     Price = 10000
                 },
             new Car
@@ -28,7 +28,7 @@ namespace Select_Multiple_Item.Data
                 Id = 2,
                 Manufacturer = Manufacturers.Chevrolet,
                 Model = "Malibu",
-                Color = Colors.black,
+                Color = Colors.Black,
                 Price = 15000
 			},
             new Car
@@ -36,7 +36,7 @@ namespace Select_Multiple_Item.Data
                 Id = 3,
                 Manufacturer = Manufacturers.Toyota,
                 Model = "Camry",
-                Color = Colors.green,
+                Color = Colors.Green,
                 Price = 12000
 
 			},
@@ -45,7 +45,7 @@ namespace Select_Multiple_Item.Data
                 Id = 4,
                 Manufacturer = Manufacturers.Honda,
                 Model = "Civic",
-                Color = Colors.red,
+                Color = Colors.Red,
                 Price = 10000
 
 			},
@@ -54,7 +54,7 @@ namespace Select_Multiple_Item.Data
                 Id = 5,
                 Manufacturer = Manufacturers.Ford,
                 Model = "Focus",
-                Color = Colors.yellow,
+                Color = Colors.Yellow,
                 Price = 13000
 
 			},
@@ -63,7 +63,7 @@ namespace Select_Multiple_Item.Data
                 Id = 6,
                 Manufacturer = Manufacturers.BMW,
                 Model = "X5",
-                Color = Colors.black,
+                Color = Colors.Black,
                 Price = 35000
 
 			},
@@ -72,7 +72,7 @@ namespace Select_Multiple_Item.Data
                 Id = 7,
                 Manufacturer = Manufacturers.Audi,
                 Model = "A4",
-                Color = Colors.blue,
+                Color = Colors.Blue,
                 Price = 30000
 
 			},
@@ -81,7 +81,7 @@ namespace Select_Multiple_Item.Data
                 Id = 8,
                 Manufacturer = Manufacturers.Mercedes,
                 Model = "C-Class",
-                Color = Colors.white,
+                Color = Colors.White,
                 Price = 20000
             },
             new Car
@@ -89,7 +89,7 @@ namespace Select_Multiple_Item.Data
                 Id = 9,
                 Manufacturer = Manufacturers.Hyundai,
                 Model = "Elantra",
-                Color = Colors.white,
+                Color = Colors.White,
                 Price = 25000
 
 			},
@@ -98,7 +98,7 @@ namespace Select_Multiple_Item.Data
                 Id = 10,
                 Manufacturer = Manufacturers.Kia,
                 Model = "Optima",
-                Color = Colors.green,
+                Color = Colors.Green,
                 Price = 15000
 
 			}

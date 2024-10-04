@@ -1,0 +1,137 @@
+﻿@using Select_Multiple_Item.Entities
+@using Select_Multiple_Item.Enums
+@{
+    ViewData["Title"] = "Car List";
+}
+@model (List<Car> , List<string>,  List<string> )
+<div id="app">
+    
+   <div>
+     <div id="filter-form" >
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Manufacturer</label>
+                <div class="col-sm-8">
+                    <select id="filterbymanufacturer" class="form-select select2" v-model="selectedManufacturers" name="filterbymanufacturer" multiple>
+                        <option v-for="manufacturer in manufacturers" :key="manufacturer" :value="manufacturer">
+                            {{ manufacturer }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Colors</label>
+                <div class="col-sm-8">
+                    <select id="filterbycolor" class="form-select select2" name="filterbycolor" multiple>
+                        <option v-for="color in colors" :key="color" :value="color">
+                            {{ color }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <label for="MinPrice">Minimum Price:</label>
+            <input type="number" id="MinPrice" v-model="minPrice" name="MinPrice" step="0.01" min="0" />
+
+            <label for="MaxPrice">Maximum Price:</label>
+            <input type="number" id="MaxPrice" v-model="maxPrice" name="MaxPrice" step="0.01" min="0" />
+
+            <div class="d-flex justify-content-end mb-3">
+                <button @@click="applyFilters" class="btn btn-primary">Filter</button>
+                <a href="/CarWithVueJs" class="btn btn-secondary ms-3">Back to List</a>
+            </div>
+    </div>
+        <div v-if="filteredCars.length > 0">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Manufacturer</th>
+                        <th>Model</th>
+                        <th>Color</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="car in filteredCars" :key="car.id">
+                        <td>{{ car.id }}</td>
+                        <td>{{ manufacturers[car.manufacturer] }}</td>
+                        <td>{{ car.model }}</td>
+                        <td>{{ colors[car.color] }}</td>
+                        <td>{{ car.price }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-else>
+            <p>No cars found matching your filters.</p>
+        </div>
+    </div>
+    
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            cars: @Html.Raw(Json.Serialize(Model.Item1)),
+            colors: @Html.Raw(Json.Serialize(Enum.GetNames(typeof(Colors)))),
+            manufacturers: @Html.Raw(Json.Serialize(Enum.GetNames(typeof(Manufacturers)))),
+            selectedManufacturers: '',
+            selectedColors: '',
+            minPrice: null,
+            maxPrice: null,
+            filteredCars: []
+        },
+        methods:  {
+             applyFilters: async function() {
+                try {
+                    let selected = document.getElementById("filterbycolor").selectedOptions;
+                    let newArray = [];
+                    for (let i = 0; i < selected.length; i++) {
+                        newArray.push(selected[i]._value);
+                    }
+                    let selectedmanufacturer = document.getElementById("filterbymanufacturer").selectedOptions;
+                    let newArraymanufacturer = [];
+                    for (let i = 0; i < selectedmanufacturer.length; i++) {
+                        newArraymanufacturer.push(selectedmanufacturer[i]._value);
+                    }
+                    let query = "?";
+                    query += ("filterbycolor=" + newArray);
+                    query += ("&filterbymanufacturer=" + newArraymanufacturer);
+                    query += ("&MinPrice=" + this.minPrice);
+                    query += ("&MaxPrice=" + this.maxPrice);
+                    
+                    const response = await axios.get('/CarWithVueJs/Filter' + query, 
+                    );
+                    
+                    console.log(response.data.data);
+                    this.filteredCars = response.data.data;
+                } catch (error) {
+                    console.error('Error fetching filtered cars:', error);
+                }
+            }
+        },
+        // watch: {
+        //     'maxPrice'(to, from) {
+        //         console.log(to, from);
+        //     }
+        // },
+          mounted() {
+            this.filteredCars = this.cars;
+          }
+    });
+</script>
+
+
+
+
+
+
+
+

@@ -2,15 +2,15 @@
 {
     public enum Colors
     {
-        black,
-        green,
-        white,
-        yellow,
-        blue,
-        red,
-        grey,
-        orange,
-        brown
+        Black,
+        Green,
+        White,
+        Yellow,
+        Blue,
+        Red,
+        Grey,
+        Orange,
+        Brown
 
     }
 }
