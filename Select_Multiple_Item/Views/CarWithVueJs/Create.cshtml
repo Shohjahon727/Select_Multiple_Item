@@ -1,0 +1,36 @@
+﻿@model Select_Multiple_Item.Entities.Car
+
+<h1>Create a New Car</h1>
+
+<form method="post">
+	<div class="border p-3 mt-4 shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+		<div class="row pb-2">
+			<h2 class="text-primary text-center">Create Car</h2>
+			<hr />
+		</div>
+		<div class="mb-3 row p-1">
+			<label asp-for="Manufacturer" class="p-0"></label>
+			<input asp-for="Manufacturer" class="form-control" />
+		</div>
+		<div class="mb-3 row p-1">
+			<label asp-for="Model" class="p-0"></label>
+			<input asp-for="Model" class="form-control" />
+		</div>
+		<div class="mb-3 row p-1">
+			<label asp-for="Color" class="p-0"></label>
+			<input asp-for="Color" class="form-control" />
+		</div>
+		<div class="mb-3 row p-1">
+			<label asp-for="Price" class="p-0"></label>
+			<input asp-for="Price" class="form-control" />
+		</div>
+		<div class="row">
+			<div class="col-6 col-md-3">
+				<button type="submit" class="btn btn-primary form-control">Create</button>
+			</div>
+			<div class="col-6 col-md-3">
+				<a href="/CarWithVueJs" class="btn btn-secondary form-control">Back to List</a>
+			</div>
+		</div>
+	</div>
+</form>

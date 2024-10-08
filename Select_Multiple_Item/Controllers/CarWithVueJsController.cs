@@ -23,6 +23,22 @@ public class CarWithVueJsController : Controller
         
         return View((allCars, new List<string>(),new List<string>())); 
     }
+
+    public IActionResult Create ()
+    {
+        return View();
+    }
+    [HttpPost]
+    public IActionResult Create (Car car)
+    {
+        if(ModelState.IsValid)
+        {
+            _context.Cars.Add(car);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        return View(car);
+    }
     public IActionResult FilterByColor( string[] filterbycolor)
     {
 
@@ -122,5 +138,6 @@ public class CarWithVueJsController : Controller
     }
 
 
+   
 }
 

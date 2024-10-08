@@ -41,8 +41,16 @@
             </div>
     </div>
         <div v-if="filteredCars.length > 0">
-
-            <table class="table table-striped">
+            <div class="row pb-3">
+                <div class="col-6">
+                </div>
+                <div class="col-6 text-end">
+                    <a asp-controller="CarWithVueJs" asp-action="Create" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Create New Car
+                    </a>
+                </div>
+            </div>
+            <table  class="table table-striped">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -88,7 +96,7 @@
             selectedColors: '',
             minPrice: null,
             maxPrice: null,
-            filteredCars: []
+            filteredCars:[]
         },
         methods:  {
              applyFilters: async function() {
@@ -121,6 +129,12 @@
 
                     window.history.pushState(null, '', '/CarWithVueJs/?' + queryParams.toString());
 
+                    // if (queryParams.toString()) {
+                    //     window.history.pushState(null, '', '/CarWithVueJs/?' + queryParams.toString());
+                    // } else {
+                    //     window.history.pushState(null, '', '/CarWithVueJs'); 
+                    // }
+
                     const response = await axios.get('/CarWithVueJs/Filter?' + queryParams.toString()); 
 
                     console.log(response.data.data);
@@ -130,26 +144,39 @@
                 } catch (error) {
                     console.error('Error fetching filtered cars:', error);
                 }
+            },
+            filterCars: function () {
+                this.applyFilters();
             }
         },
+        
         beforeMount() {
+            
             const urlParams = new URLSearchParams(window.location.search);
             const filtercolor = urlParams.get('filterbycolor');
             const filterbymanufacturer = urlParams.get('filterbymanufacturer');
             const MinPrice = urlParams.get('MinPrice');
             const MaxPrice = urlParams.get('MaxPrice');
-            this.selectedColors = filtercolor?.split(',');
-            this.selectedManufacturers = filterbymanufacturer?.split(',');
-            this.minPrice = MinPrice;
-            this.maxPrice = MaxPrice;
+            
+            this.selectedColors = filtercolor ? filtercolor.split(',') : [];
+            this.selectedManufacturers = filterbymanufacturer ? filterbymanufacturer.split(',') : [];
+            this.minPrice = MinPrice ? parseFloat(MinPrice) : null;
+            this.maxPrice = MaxPrice ? parseFloat(MaxPrice) : null;
+
         },
           mounted() {
-            this.applyFilters();
-            this.filteredCars = this.cars;
-          }
+            // if (!this.filteredCars.length) {
+            //     this.filteredCars = this.cars; 
+            // }
+            // this.applyFilters();
+            this.filterCars();
+              
+          },
         
     });
 </script>
+
+
  @* watch: {
      'maxPrice'(to, from) {
          console.log(to, from);
