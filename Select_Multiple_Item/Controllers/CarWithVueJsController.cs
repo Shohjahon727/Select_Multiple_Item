@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Select_Multiple_Item.Data;
 using Select_Multiple_Item.Entities;
 using Select_Multiple_Item.Enums;
 using Select_Multiple_Item.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Select_Multiple_Item.Controllers;
 public class CarWithVueJsController : Controller
@@ -69,11 +71,14 @@ public class CarWithVueJsController : Controller
             var allCars = _context.Cars.ToList();
             return View("Index", allCars);
         }
+
         List<Manufacturers> manufacturers = new List<Manufacturers>();
+
         foreach (var item in filterbymanufacturer)
         {
             manufacturers.Add((Manufacturers)Enum.Parse(typeof(Manufacturers), item, true));
         }
+
         var filteredCars = _context.Cars
             .Where(car => manufacturers.Contains(car.Manufacturer))
             .ToList();
@@ -81,13 +86,23 @@ public class CarWithVueJsController : Controller
     }
 
     [HttpGet]
-    public IActionResult Filter([FromQuery] string? filterbycolor,[FromQuery] string? filterbymanufacturer,[FromQuery] decimal? MinPrice,[FromQuery] decimal? MaxPrice)
+    public IActionResult Filter([FromQuery] string? filterbycolor,
+        [FromQuery] string? filterbymanufacturer,
+        [FromQuery] decimal? MinPrice,
+        [FromQuery] decimal? MaxPrice, 
+        [FromQuery] int page = 1,
+        [FromQuery]  int pageSize = 10)
     {
         var query = _context.Cars.AsQueryable();
+
         var filterColors = filterbycolor?.Split(',');
+
         var filterManufacturers = filterbymanufacturer?.Split(',');
+
         List<Colors> colors = new List<Colors>();
+
         List<Manufacturers> manufacturers = new List<Manufacturers>();
+
         if (filterColors != null && filterColors.Length > 0)
         {
             colors = filterColors.Select(c => Enum.Parse<Colors>(c)).ToList();
@@ -110,21 +125,53 @@ public class CarWithVueJsController : Controller
             query = query.Where(car => car.Price <= MaxPrice.Value);
         }
 
-        var filteredCars = query.Select(car => new
-        {
-            Id = car.Id,
-            Color = car.Color,
-            Manufacturer = car.Manufacturer,
-            Model = car.Model,
-            Price = car.Price,
 
-        }).ToList();
+
+        var totalCount = query.Count();
+
+        var filteredCars = query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(car => new
+            {
+                Id = car.Id,
+                Color = car.Color,
+                Manufacturer = car.Manufacturer,
+                Model = car.Model,
+                Price = car.Price,
+            }).ToList();
 
         return Json(new
         {
             data = filteredCars,
             selectedColors = colors,
-            selectedManufacturers = manufacturers 
+            selectedManufacturers = manufacturers,
+            totalItems = totalCount
+        });
+    }
+    [HttpGet]
+    public IActionResult GetPagedData([FromQuery] int page = 1, [FromQuery]  int pageSize = 10)
+    {
+        var query = _context.Cars.AsQueryable();
+
+        var totalCount = query.Count();
+
+        var filteredCars = query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(car => new
+            {
+                Id = car.Id,
+                Color = car.Color,
+                Manufacturer = car.Manufacturer,
+                Model = car.Model,
+                Price = car.Price,
+            })
+        .ToList();
+        return Json(new 
+        {
+            data = filteredCars,
+            totalItem = totalCount,
         });
     }
     public IActionResult PriceRange(decimal MinPrice, decimal MaxPrice)
