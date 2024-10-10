@@ -89,7 +89,7 @@ public class CarWithVueJsController : Controller
     public IActionResult Filter([FromQuery] string? filterbycolor,
         [FromQuery] string? filterbymanufacturer,
         [FromQuery] decimal? MinPrice,
-        [FromQuery] decimal? MaxPrice, 
+        [FromQuery] decimal? MaxPrice ,
         [FromQuery] int page = 1,
         [FromQuery]  int pageSize = 10)
     {

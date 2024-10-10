@@ -73,10 +73,10 @@
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
                     <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                        <button class="page-link"  @@click="changePage(currentPage - 1)">Previous</button>
+                        <button class="page-link" @@click="changePage(currentPage - 1)">Previous</button>
                     </li>
                     <li class="page-item" v-for="page in totalPages" :key="page" :class="{ active: currentPage == page }">
-                        <button class="page-link"  @@click="changePage(page)">{{ page }}</button>
+                        <button class="page-link" @@click="changePage(page)">{{ page }}</button>
                     </li>
                     <li class="page-item" :class="{ disabled: currentPage === totalPages }">
                         <button class="page-link" @@click="changePage(currentPage + 1)">Next</button>
@@ -147,13 +147,8 @@
                         queryParams.append("MaxPrice", this.maxPrice);
                     }
 
-                    if (this.currentPage) { 
-                        queryParams.append("page", this.currentPage);
-                    }
-
-                    if (this.pageSize) {
-                        queryParams.append("pageSize", this.pageSize);
-                    }
+                    if (this.currentPage) queryParams.append("page", this.currentPage);
+                    if (this.pageSize) queryParams.append("pageSize", this.pageSize);
 
                     window.history.pushState(null, '', '/CarWithVueJs/?' + queryParams.toString());
 
@@ -175,7 +170,22 @@
             filterCars: function () {
                 this.applyFilters();
             },
+            // getPagedData: async function () {
+            //     try {
+            //         let queryParams = new URLSearchParams();
 
+            //         if (this.currentPage) queryParams.append("page", this.currentPage);
+            //         if (this.pageSize) queryParams.append("pageSize", this.pageSize);
+
+            //         const response = await axios.get('/CarWithVueJs/GetPagedData?' + queryParams.toString());
+            //         console.log(response.data.data);
+            //         this.filteredCars = response.data.data;
+            //         this.totalItems = response.data.totalItem;
+            //         this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+            //     } catch (error) {
+            //         console.error('Error fetching paged data:', error);
+            //     }
+            // },
             changePage: function (page) {
                 if (page > 0 && page <= this.totalPages) {
                     this.currentPage = page;
@@ -206,6 +216,8 @@
           mounted() {
              
             this.filterCars();
+            // this.getPagedData();
+
           },
         
     });
