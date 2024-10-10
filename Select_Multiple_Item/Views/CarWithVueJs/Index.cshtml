@@ -36,7 +36,7 @@
             <input type="number" id="MaxPrice" v-model="maxPrice" name="MaxPrice" step="0.01" min="0" />
 
             <div class="d-flex justify-content-end mb-3">
-                <button @@click="applyFilters" class="btn btn-primary">Filter</button>
+                <button @@click="filterCars" class="btn btn-primary">Filter</button>
                 <a href="/CarWithVueJs" class="btn btn-secondary ms-3">Back to List</a>
             </div>
     </div>
@@ -107,8 +107,8 @@
             cars: @Html.Raw(Json.Serialize(Model.Item1)),
             colors: @Html.Raw(Json.Serialize(Enum.GetNames(typeof(Colors)))),
             manufacturers: @Html.Raw(Json.Serialize(Enum.GetNames(typeof(Manufacturers)))),
-            selectedManufacturers: '',
-            selectedColors: '',
+            selectedManufacturers: [],
+            selectedColors: [],
             minPrice: null,
             maxPrice: null,
             filteredCars: [],
@@ -162,12 +162,17 @@
 
                     this.totalPages = Math.ceil(this.totalItems / this.pageSize);
 
+                    this.selectedColors = newArray;
+
+                    this.selectedManufacturers = newArraymanufacturer;
+
                 } catch (error) {
                     console.error('Error fetching filtered cars:', error);
                 }
             },
 
             filterCars: function () {
+                this.currentPage = 1;
                 this.applyFilters();
             },
             // getPagedData: async function () {

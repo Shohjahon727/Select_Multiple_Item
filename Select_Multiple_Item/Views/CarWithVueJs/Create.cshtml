@@ -1,36 +1,61 @@
-﻿@model Select_Multiple_Item.Entities.Car
-
+﻿@using Select_Multiple_Item.Enums
+@model Select_Multiple_Item.Entities.Car
 <h1>Create a New Car</h1>
+<div id="app">  
+	<form method="post">
+		<div class="border p-3 mt-4 shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+			<div class="row pb-2">
+				<h2 class="text-primary text-center">Create Car</h2>
+				<hr />
+			</div>
+			<div class="mb-3 row p-1">
+				<label asp-for="Manufacturer" class="p-0"></label>
+				<select asp-for="Manufacturer" class="form-control">
+					<option v-for="manufacturer in manufacturers" :key="manufacturer" :value="manufacturer">
+						{{ manufacturer }}
+					</option> 
+				</select>
+			</div>
+			<div class="mb-3 row p-1">
+				<label asp-for="Model" class="p-0"></label>
+				<input asp-for="Model" class="form-control" />
+			</div>
+			<div class="mb-3 row p-1">
+				<label asp-for="Color" class="p-0"></label>
+				<select asp-for="Color" class="form-control">
+					<option v-for="color in colors" :key="color" :value="color">
+						{{ color }}
+					</option>
+				</select>
+			</div>
+			<div class="mb-3 row p-1">
+				<label asp-for="Price" class="p-0"></label>
+				<input asp-for="Price" class="form-control" />
+			</div>
+			<div class="row">
+				<div class="col-6 col-md-3">
+					<button type="submit" class="btn btn-primary form-control">Create</button>
+				</div>
+				<div class="col-6 col-md-3">
+					<a href="/CarWithVueJs" class="btn btn-secondary form-control">Back to List</a>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
 
-<form method="post">
-	<div class="border p-3 mt-4 shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-		<div class="row pb-2">
-			<h2 class="text-primary text-center">Create Car</h2>
-			<hr />
-		</div>
-		<div class="mb-3 row p-1">
-			<label asp-for="Manufacturer" class="p-0"></label>
-			<input asp-for="Manufacturer" class="form-control" />
-		</div>
-		<div class="mb-3 row p-1">
-			<label asp-for="Model" class="p-0"></label>
-			<input asp-for="Model" class="form-control" />
-		</div>
-		<div class="mb-3 row p-1">
-			<label asp-for="Color" class="p-0"></label>
-			<input asp-for="Color" class="form-control" />
-		</div>
-		<div class="mb-3 row p-1">
-			<label asp-for="Price" class="p-0"></label>
-			<input asp-for="Price" class="form-control" />
-		</div>
-		<div class="row">
-			<div class="col-6 col-md-3">
-				<button type="submit" class="btn btn-primary form-control">Create</button>
-			</div>
-			<div class="col-6 col-md-3">
-				<a href="/CarWithVueJs" class="btn btn-secondary form-control">Back to List</a>
-			</div>
-		</div>
-	</div>
-</form>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+	new Vue (
+		{
+			el: '#app',
+			data: {
+				colors: @Html.Raw(Json.Serialize(Enum.GetNames(typeof(Colors)))),
+				manufacturers: @Html.Raw(Json.Serialize(Enum.GetNames(typeof(Manufacturers)))),
+			}
+		}
+	)
+</script>
