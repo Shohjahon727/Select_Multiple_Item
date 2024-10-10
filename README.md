@@ -1,6 +1,6 @@
-Filter 
+Filter with Pagination
 
-![image](https://github.com/user-attachments/assets/1d0d4e9b-9baa-4dbf-9d84-6b6a7154e2a5)
+![image](https://github.com/user-attachments/assets/f4c8b095-4c85-4a0e-a406-f3d14b3c8b08)
 
 This page is written in Vue Js
 
