@@ -38,7 +38,7 @@ public class CarController : Controller
         return View(car);
     }
 
-	//[HttpGet]
+	
 	public IActionResult FilterByColor(string[] filterbycolor)
     {
 
@@ -77,6 +77,15 @@ public class CarController : Controller
 		var filteredCars = _context.Cars
 			.Where(car => manufacturers.Contains(car.Manufacturer))
 			.ToList();
+		return View("Index", filteredCars);
+	}
+	public IActionResult PriceRange(decimal MinPrice, decimal MaxPrice)
+	{
+
+		var filteredCars = _context.Cars
+									.Where(a => a.Price >= MinPrice && a.Price <= MaxPrice)
+									.ToList();
+
 		return View("Index", filteredCars);
 	}
 
@@ -165,19 +174,4 @@ public class CarController : Controller
 
 	//	return View("Index", (filteredCars, filterbymanufacturer.ToList(), filterbycolor.ToList()));
 	//}
-
-
-	
-
-	public IActionResult PriceRange(decimal MinPrice, decimal MaxPrice)
-	{
-		
-			var filteredCars = _context.Cars
-										.Where(a => a.Price >= MinPrice && a.Price <= MaxPrice)
-										.ToList();
-
-			return View("Index", filteredCars); 
-	}
-
-
 }

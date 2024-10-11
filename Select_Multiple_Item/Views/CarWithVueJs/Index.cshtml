@@ -6,51 +6,57 @@
 @model (List<Car> , List<string>,  List<string> )
 <div id="app">
     
-   <div>
-     <div id="filter-form" >
-            <div class="row mb-3">
-                <label class="col-sm-4 col-form-label">Manufacturer</label>
-                <div class="col-sm-8">
-                    <select id="filterbymanufacturer" class="form-select select2" v-model="selectedManufacturers" name="filterbymanufacturer" multiple>
-                        <option v-for="manufacturer in manufacturers" :key="manufacturer" :value="manufacturer">
-                            {{ manufacturer }}
-                        </option>
-                    </select>
+         <div id="filter-form" >
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Manufacturer</label>
+                    <div class="col-sm-8">
+                        <select id="filterbymanufacturer" class="form-select select2" v-model="selectedManufacturers" name="filterbymanufacturer" multiple>
+                            <option v-for="manufacturer in manufacturers" :key="manufacturer" :value="manufacturer">
+                                {{ manufacturer }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-3">
-                <label class="col-sm-4 col-form-label">Colors</label>
-                <div class="col-sm-8">
-                    <select id="filterbycolor" class="form-select select2"v-model="selectedColors" name="filterbycolor" multiple>
-                        <option v-for="color in colors" :key="color" :value="color">
-                            {{ color }}
-                        </option>
-                    </select>
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Colors</label>
+                    <div class="col-sm-8">
+                        <select id="filterbycolor" class="form-select select2"v-model="selectedColors" name="filterbycolor" multiple>
+                            <option v-for="color in colors" :key="color" :value="color">
+                                {{ color }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <label for="MinPrice">Minimum Price:</label>
-            <input type="number" id="MinPrice" v-model="minPrice" name="MinPrice" step="0.01" min="0" />
+                <label for="MinPrice">Minimum Price:</label>
+                <input type="number" id="MinPrice" v-model="minPrice" name="MinPrice" step="0.01" min="0" />
 
-            <label for="MaxPrice">Maximum Price:</label>
-            <input type="number" id="MaxPrice" v-model="maxPrice" name="MaxPrice" step="0.01" min="0" />
+                <label for="MaxPrice">Maximum Price:</label>
+                <input type="number" id="MaxPrice" v-model="maxPrice" name="MaxPrice" step="0.01" min="0" />
 
-            <div class="d-flex justify-content-end mb-3">
-                <button @@click="filterCars" class="btn btn-primary">Filter</button>
-                <a href="/CarWithVueJs" class="btn btn-secondary ms-3">Back to List</a>
-            </div>
-    </div>
-        <div v-if="filteredCars.length > 0">
-            <div class="row pb-3">
-                <div class="col-6">
+                <div class="d-flex justify-content-end mb-3">
+                    <button @@click="filterCars" class="btn btn-primary">Filter</button>
+                    <a href="/CarWithVueJs" class="btn btn-secondary ms-3">Back to List</a>
                 </div>
-                <div class="col-6 text-end">
-                    <a asp-controller="CarWithVueJs" asp-action="Create" class="btn btn-primary">
-                        <i class="bi bi-plus-circle"></i> Create New Car
-                    </a>
+        </div>
+        <div class="row pb-3">
+            <div class="col-6">
+            </div>
+            <div class="col-6 text-end">
+                <a asp-controller="CarWithVueJs" asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create New Car
+                </a>
+            </div>
+        </div>
+        <div class="card shadow-lg p-3 mb-0 bg-body-tertiary rounded mt-3 mb-3" v-if="filteredCars.length > 0">
+            <div class="card-header bg-gradient ml-0 py-2  p-3 mb-2 bg-body-tertiary rounded">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="text-black py-2">List of Cars</h2>
+                    </div>
                 </div>
             </div>
-            <table  class="table table-striped">
+            <table  class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -85,12 +91,10 @@
             </nav>
         </div>
        
-    
         <div v-else>
             <p>No cars found matching your filters.</p>
         </div>
-    </div>
-    
+
 </div>
 
 
@@ -175,22 +179,7 @@
                 this.currentPage = 1;
                 this.applyFilters();
             },
-            // getPagedData: async function () {
-            //     try {
-            //         let queryParams = new URLSearchParams();
-
-            //         if (this.currentPage) queryParams.append("page", this.currentPage);
-            //         if (this.pageSize) queryParams.append("pageSize", this.pageSize);
-
-            //         const response = await axios.get('/CarWithVueJs/GetPagedData?' + queryParams.toString());
-            //         console.log(response.data.data);
-            //         this.filteredCars = response.data.data;
-            //         this.totalItems = response.data.totalItem;
-            //         this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-            //     } catch (error) {
-            //         console.error('Error fetching paged data:', error);
-            //     }
-            // },
+            
             changePage: function (page) {
                 if (page > 0 && page <= this.totalPages) {
                     this.currentPage = page;
@@ -219,32 +208,11 @@
 
         },
           mounted() {
-             
             this.filterCars();
-            // this.getPagedData();
-
           },
         
     });
 </script>
-
-
- @* watch: {
-     'maxPrice'(to, from) {
-         console.log(to, from);
-        }
-    }, *@
-
-  @*    if (queryParams.toString()) {
-                         window.history.pushState(null, '', '/CarWithVueJs/?' + queryParams.toString());
-                     } else {
-                         window.history.pushState(null, '', '/CarWithVueJs');
-                     }
- *@
-             @* if (!this.filteredCars.length) {
-                this.filteredCars = this.cars;
-            }
-            this.applyFilters(); *@
 
 
 
