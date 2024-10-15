@@ -48,12 +48,23 @@
                 </a>
             </div>
         </div>
+
         <div class="card shadow-lg p-3 mb-0 bg-body-tertiary rounded mt-3 mb-3" v-if="filteredCars.length > 0">
             <div class="card-header bg-gradient ml-0 py-2  p-3 mb-2 bg-body-tertiary rounded">
                 <div class="row">
                     <div class="col-12 text-center">
                         <h2 class="text-black py-2">List of Cars</h2>
                     </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div style="width:112px">
+                    <select v-model="pageSize" class="form-select" @@change="filterCars">
+                        <option :value="10">10</option>
+                        <option :value="25">25</option>
+                        <option :value="50">50</option>
+                        <option :value="100">100</option>
+                    </select>
                 </div>
             </div>
             <table  class="table table-bordered table-striped">
@@ -123,6 +134,12 @@
         },
 
         methods: {
+            setPageSize(size) {
+
+                this.pageSize = size;
+                this.currentPage = 1;
+                this.applyFilters();
+            },
             applyFilters: async function () {
                 try {
                     let selected = document.getElementById("filterbycolor").selectedOptions;
